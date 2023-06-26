@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NearShare": {
+      "commandName": "Project",
+      "commandLineArgs": "send --url \"https://shortdev.de\""
+    }
+  }
+}

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NearShare", "NearShare\NearShare.csproj", "{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {40C92CC2-DA64-490D-B7F5-E3A1A3C579BC}
+	EndGlobalSection
+EndGlobal
