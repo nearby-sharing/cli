@@ -41,7 +41,7 @@ internal class Send : INearShareCommand
         {
             using var cdp = CdpUtils.CreatePlatform(deviceName);
 
-            List<CdpDevice> devices = new();
+            HashSet<CdpDevice> devices = new();
             void OnDeviceDiscovered(ICdpTransport sender, CdpDevice device, BLeBeacon advertisement)
                 => devices.Add(device);
 
@@ -67,7 +67,7 @@ internal class Send : INearShareCommand
                 new SelectionPrompt<CdpDevice>()
                     .Title("Choose a device")
                     .AddChoices(devices)
-                    .UseConverter(device => $"{device.Name} via {device.Endpoint.TransportType} [{device.Type}]")
+                    .UseConverter(device => $@"{device.Name} via {device.Endpoint.TransportType} {device.Type}")
             );
 
             NearShareSender sender = new(cdp);

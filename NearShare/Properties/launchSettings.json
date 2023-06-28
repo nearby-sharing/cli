@@ -1,8 +1,16 @@
 {
   "profiles": {
-    "NearShare": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "NearShare Send": {
       "commandName": "Project",
       "commandLineArgs": "send --url \"https://shortdev.de\""
+    },
+    "NearShare Receive": {
+      "commandName": "Project",
+      "commandLineArgs": "receive --path \"~/path\""
     }
   }
 }
