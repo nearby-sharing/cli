@@ -1,6 +1,4 @@
 ﻿using NearShare.Commands;
-using ShortDev.Microsoft.ConnectedDevices;
-using ShortDev.Microsoft.ConnectedDevices.Encryption;
 using ShortDev.Microsoft.ConnectedDevices.NearShare;
 using ShortDev.Microsoft.ConnectedDevices.Platforms;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
@@ -39,6 +37,21 @@ internal class Send : INearShareCommand
         };
         command.SetHandler(async (deviceName, filePath, uriStr) =>
         {
+            Uri? uri = null;
+            if (!string.IsNullOrEmpty(uriStr))
+            {
+                if (!Uri.TryCreate(uriStr, UriKind.Absolute, out uri))
+                {
+                    AnsiConsole.Markup("[maroon]Invalid uri[/]");
+                    return;
+                }
+            }
+            else if (!File.Exists(filePath))
+            {
+                AnsiConsole.Markup("[maroon]Invalid file path[/]");
+                return;
+            }
+
             using var cdp = CdpUtils.CreatePlatform(deviceName);
 
             HashSet<CdpDevice> devices = new();
@@ -71,7 +84,7 @@ internal class Send : INearShareCommand
             );
 
             NearShareSender sender = new(cdp);
-            if (Uri.TryCreate(uriStr, UriKind.Absolute, out var uri))
+            if (uri != null)
             {
                 await sender.SendUriAsync(device, uri);
             }
