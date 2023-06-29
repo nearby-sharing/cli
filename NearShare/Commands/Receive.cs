@@ -29,7 +29,6 @@ internal class Receive : INearShareCommand
         {
             IsRequired = false,
         };
-        deviceName.AddAlias("-f");
 
         Command command = new("receive", description: "Receive from a remote device")
         {
