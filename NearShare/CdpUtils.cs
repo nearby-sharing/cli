@@ -12,8 +12,14 @@ namespace NearShare;
 
 internal static partial class CdpUtils
 {
-    public static ConnectedDevicesPlatform CreatePlatform(string? deviceName, DeviceType deviceType = DeviceType.Linux)
+    public static ConnectedDevicesPlatform CreatePlatform(string? deviceName)
     {
+        DeviceType deviceType = DeviceType.Linux;
+        if (OperatingSystem.IsWindows())
+            deviceType = DeviceType.Windows10Desktop;
+        else if (OperatingSystem.IsMacOS())
+            deviceType = DeviceType.iPad; // ToDo: Is there an entry for MacOs?
+
         ConnectedDevicesPlatform cdp = new(new()
         {
             Name = deviceName ?? Environment.MachineName,
