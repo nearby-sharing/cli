@@ -53,12 +53,12 @@ internal class Receive : INearShareCommand
 
             if (transferToken is UriTransferToken uriTransfer)
             {
-                AnsiConsole.MarkupLine($"Received from [green]{uriTransfer.DeviceName}[/]");
-                AnsiConsole.MarkupLine($"[white]{uriTransfer.Uri}[/]");
+                AnsiConsole.MarkupLine($"Received from [green]{Markup.Escape(uriTransfer.DeviceName)}[/]");
+                AnsiConsole.MarkupLine($"[white]{Markup.Escape(uriTransfer.Uri)}[/]");
             }
             else if (transferToken is FileTransferToken fileTransfer)
             {
-                if (!force && !AnsiConsole.Confirm($"Do you want to receive file \"{fileTransfer.FileNames}\" from {fileTransfer.DeviceName}?", defaultValue: true))
+                if (!force && !AnsiConsole.Confirm($"Do you want to receive file \"{Markup.Escape(string.Join(", ", fileTransfer.FileNames))}\" from {Markup.Escape(fileTransfer.DeviceName)}?", defaultValue: true))
                 {
                     fileTransfer.Cancel();
                     return;
