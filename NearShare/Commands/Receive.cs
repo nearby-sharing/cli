@@ -65,7 +65,31 @@ internal class Receive : INearShareCommand
                 }
 
                 // ToDo: Create filestreams
-                // fileTransfer.Accept();
+                fileTransfer.Accept(
+                    fileTransfer.FileNames
+                        .Select(fileName => File.OpenWrite(Path.Combine(path, Path.GetFileName(fileName))))
+                        .ToArray()
+                );
+
+                await AnsiConsole.Progress().StartAsync(async ctx =>
+                {
+                    var fileProgress = ctx.AddTask("Files");
+                    var bytesTask = ctx.AddTask("Bytes");
+
+                    TaskCompletionSource promise = new();
+                    fileTransfer.SetProgressListener(progress =>
+                    {
+                        fileProgress.MaxValue = progress.TotalFilesToSend;
+                        fileProgress.Value = progress.FilesSent;
+
+                        bytesTask.MaxValue = progress.TotalBytesToSend;
+                        bytesTask.Value = progress.BytesSent;
+
+                        if (fileTransfer.IsTransferComplete)
+                            promise.TrySetResult();
+                    });
+                    await promise.Task;
+                });
             }
             else
                 throw new UnreachableException();

@@ -10,7 +10,7 @@
     },
     "NearShare Receive": {
       "commandName": "Project",
-      "commandLineArgs": "receive --path \"~/path\""
+      "commandLineArgs": "receive --path \"%USERPROFILE%/Downloads\""
     }
   }
 }
