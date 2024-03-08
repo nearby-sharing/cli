@@ -1,11 +1,9 @@
 ﻿using NearShare.Commands;
+using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.NearShare;
-using ShortDev.Microsoft.ConnectedDevices.Platforms.Network;
 using Spectre.Console;
 using System.CommandLine;
 using System.Diagnostics;
-using System.Net;
-using System.Runtime.CompilerServices;
 
 namespace NearShare;
 
@@ -37,18 +35,13 @@ internal class Receive : INearShareCommand
         };
         command.SetHandler(async (path, deviceName, force) =>
         {
-            using var cdp = CdpUtils.CreatePlatform(deviceName);
+            using var cdp = await CdpUtils.CreatePlatformAsync(deviceName);
 
             CancellationTokenSource tokenSource = new();
             cdp.Listen(tokenSource.Token);
             cdp.Advertise(tokenSource.Token);
 
-            ReceiveHandler handler = new();
-            NearShareReceiver.Start(cdp, handler);
-
-            var transferToken = await handler;
-
-            NearShareReceiver.Stop();
+            var transferToken = await ReceiveAsync(cdp);
             tokenSource.Cancel();
 
             if (transferToken is UriTransferToken uriTransfer)
@@ -58,36 +51,31 @@ internal class Receive : INearShareCommand
             }
             else if (transferToken is FileTransferToken fileTransfer)
             {
-                if (!force && !AnsiConsole.Confirm($"Do you want to receive file \"{Markup.Escape(string.Join(", ", fileTransfer.FileNames))}\" from {Markup.Escape(fileTransfer.DeviceName)}?", defaultValue: true))
+                if (!force && !AnsiConsole.Confirm($"Do you want to receive file \"{Markup.Escape(string.Join(", ", fileTransfer.Select(x => x.Name)))}\" from {Markup.Escape(fileTransfer.DeviceName)}?", defaultValue: true))
                 {
                     fileTransfer.Cancel();
                     return;
                 }
 
-                // ToDo: Create filestreams
                 fileTransfer.Accept(
-                    fileTransfer.FileNames
-                        .Select(fileName => File.OpenWrite(Path.Combine(path, Path.GetFileName(fileName))))
+                    fileTransfer
+                        .Select(x => File.OpenWrite(Path.Combine(path, Path.GetFileName(x.Name))))
                         .ToArray()
                 );
 
                 await AnsiConsole.Progress().StartAsync(async ctx =>
                 {
-                    var fileProgress = ctx.AddTask("Files");
                     var bytesTask = ctx.AddTask("Bytes");
 
                     TaskCompletionSource promise = new();
-                    fileTransfer.SetProgressListener(progress =>
+                    fileTransfer.Progress += progress =>
                     {
-                        fileProgress.MaxValue = progress.TotalFilesToSend;
-                        fileProgress.Value = progress.FilesSent;
-
-                        bytesTask.MaxValue = progress.TotalBytesToSend;
-                        bytesTask.Value = progress.BytesSent;
+                        bytesTask.MaxValue = progress.TotalBytes;
+                        bytesTask.Value = progress.TotalBytes;
 
                         if (fileTransfer.IsTransferComplete)
                             promise.TrySetResult();
-                    });
+                    };
                     await promise.Task;
                 });
             }
@@ -98,22 +86,24 @@ internal class Receive : INearShareCommand
         return command;
     }
 
-    sealed class NetworkHandler : INetworkHandler
+    static async ValueTask<TransferToken> ReceiveAsync(ConnectedDevicesPlatform cdp)
     {
-        public IPAddress GetLocalIp()
-            => INetworkHandler.GetLocalIpDefault();
-    }
+        TaskCompletionSource<TransferToken> promise = new();
 
-    sealed class ReceiveHandler : INearSharePlatformHandler
-    {
-        readonly TaskCompletionSource<TransferToken> _promise = new();
-        public void OnFileTransfer(FileTransferToken transfer)
-            => _promise.TrySetResult(transfer);
+        NearShareReceiver.Register(cdp);
+        try
+        {
+            NearShareReceiver.FileTransfer += OnTransfer;
+            NearShareReceiver.ReceivedUri += OnTransfer;
 
-        public void OnReceivedUri(UriTransferToken transfer)
-            => _promise.TrySetResult(transfer);
+            void OnTransfer(TransferToken transfer)
+                => promise.TrySetResult(transfer);
 
-        public TaskAwaiter<TransferToken> GetAwaiter()
-            => _promise.Task.GetAwaiter();
+            return await promise.Task;
+        }
+        finally
+        {
+            NearShareReceiver.Unregister();
+        }
     }
 }

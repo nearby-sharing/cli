@@ -1,18 +1,18 @@
-﻿using ShortDev.Microsoft.ConnectedDevices;
+﻿using Microsoft.Extensions.Logging;
+using NearShare.Platforms.Linux;
+using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Encryption;
 using ShortDev.Microsoft.ConnectedDevices.Platforms.Network;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
-using Spectre.Console;
 using System.ComponentModel;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace NearShare;
-
 internal static partial class CdpUtils
 {
-    public static ConnectedDevicesPlatform CreatePlatform(string? deviceName)
+    public static async ValueTask<ConnectedDevicesPlatform> CreatePlatformAsync(string? deviceName)
     {
         DeviceType deviceType = DeviceType.Linux;
         if (OperatingSystem.IsWindows())
@@ -20,18 +20,25 @@ internal static partial class CdpUtils
         else if (OperatingSystem.IsMacOS())
             deviceType = DeviceType.iPad; // ToDo: Is there an entry for MacOs?
 
+        var loggerFactory = LoggerFactory.Create(builder => { });
+
         ConnectedDevicesPlatform cdp = new(new()
         {
-            Name = deviceName ?? Environment.MachineName,
+            Name = string.IsNullOrEmpty(deviceName) ? Environment.MachineName : deviceName,
             OemManufacturerName = Environment.UserName,
             OemModelName = Environment.UserDomainName,
             Type = deviceType,
-            DeviceCertificate = ConnectedDevicesPlatform.CreateDeviceCertificate(CdpEncryptionParams.Default),
-            LoggerFactory = ConnectedDevicesPlatform.CreateLoggerFactory(AnsiConsole.WriteLine)
-        });
+            DeviceCertificate = ConnectedDevicesPlatform.CreateDeviceCertificate(CdpEncryptionParams.Default)
+        }, loggerFactory);
 
         NetworkHandler networkHandler = new();
-        cdp.AddTransport(new NetworkTransport(networkHandler));
+        cdp.AddTransport<NetworkTransport>(new(networkHandler));
+
+        if (OperatingSystem.IsLinux())
+        {
+            var btHandler = await LinuxBluetoothHandler.CreateAsync();
+            cdp.AddTransport<BluetoothTransport>(new(btHandler));
+        }
 
         return cdp;
     }

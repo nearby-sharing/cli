@@ -52,10 +52,10 @@ internal class Send : INearShareCommand
                 return;
             }
 
-            using var cdp = CdpUtils.CreatePlatform(deviceName);
+            using var cdp = await CdpUtils.CreatePlatformAsync(deviceName);
 
-            HashSet<CdpDevice> devices = new();
-            void OnDeviceDiscovered(ICdpTransport sender, CdpDevice device, BLeBeacon advertisement)
+            HashSet<CdpDevice> devices = [];
+            void OnDeviceDiscovered(ICdpTransport sender, CdpDevice device)
                 => devices.Add(device);
 
             await AnsiConsole.Status().StartAsync("Looking for devices", async ctx =>
@@ -99,7 +99,7 @@ internal class Send : INearShareCommand
                     Progress<NearShareProgress> progress = new();
                     progress.ProgressChanged += (s, e) =>
                     {
-                        task.Increment(e.BytesSent / e.TotalBytesToSend);
+                        task.Increment(e.TransferedBytes / e.TotalBytes);
                     };
 
                     await sender.SendFileAsync(
@@ -107,6 +107,8 @@ internal class Send : INearShareCommand
                         CdpFileProvider.FromBuffer(fileName, fileContent),
                         progress
                     );
+
+                    task.Value = 1.0;
                 });
             }
         }, deviceName, fileOption, urlOption);

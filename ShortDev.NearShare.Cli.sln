@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NearShare", "NearShare\NearShare.csproj", "{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NearShare", "NearShare\NearShare.csproj", "{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{3FF522B9-6238-46CD-8BEA-0F94B3B1E5E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShortDev.Microsoft.ConnectedDevices", "android\lib\ShortDev.Microsoft.ConnectedDevices\ShortDev.Microsoft.ConnectedDevices.csproj", "{0D0E4BB9-187C-4719-8F44-1F81F0E87B95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShortDev.Microsoft.ConnectedDevices.NearShare", "android\lib\ShortDev.Microsoft.ConnectedDevices.NearShare\ShortDev.Microsoft.ConnectedDevices.NearShare.csproj", "{A7A88583-C292-4B94-A961-17456CF58A6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +21,21 @@ Global
 		{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46252E21-EA6C-47E2-B1C9-FAC36CBCE8CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D0E4BB9-187C-4719-8F44-1F81F0E87B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D0E4BB9-187C-4719-8F44-1F81F0E87B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D0E4BB9-187C-4719-8F44-1F81F0E87B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D0E4BB9-187C-4719-8F44-1F81F0E87B95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7A88583-C292-4B94-A961-17456CF58A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7A88583-C292-4B94-A961-17456CF58A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7A88583-C292-4B94-A961-17456CF58A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7A88583-C292-4B94-A961-17456CF58A6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0D0E4BB9-187C-4719-8F44-1F81F0E87B95} = {3FF522B9-6238-46CD-8BEA-0F94B3B1E5E8}
+		{A7A88583-C292-4B94-A961-17456CF58A6F} = {3FF522B9-6238-46CD-8BEA-0F94B3B1E5E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {40C92CC2-DA64-490D-B7F5-E3A1A3C579BC}

@@ -2,23 +2,39 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFrameworks>net8.0;net8.0-macos</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Version>0.0.1</Version>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Spectre.Console" Version="0.47.0" />
-		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="../README.md" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="../../android/ShortDev.Microsoft.ConnectedDevices.NearShare/ShortDev.Microsoft.ConnectedDevices.NearShare.csproj" />
+		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
+		<PackageReference Include="Spectre.Console" Version="0.48.0" />
+		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+		<PackageReference Include="Tmds.DBus.Protocol" Version="0.16.0" />
+		<ProjectReference Include="..\android\lib\ShortDev.Microsoft.ConnectedDevices.NearShare\ShortDev.Microsoft.ConnectedDevices.NearShare.csproj" />
+	</ItemGroup>
+
+	<!-- MacOs -->
+	<ItemGroup Condition="$(TargetFramework) == 'net8.0-macos' ">
+		<Reference Include="InTheHand.IOBluetooth">
+			<HintPath>InTheHand.IOBluetooth.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<!-- Linux -->
+	<ItemGroup>
+		<PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.15">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<AdditionalFiles Include="Platforms\Linux\LEAdvertisement1.xml" DBusGeneratorMode="Handler" />
 	</ItemGroup>
 
 </Project>
