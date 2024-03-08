@@ -1,15 +1,15 @@
 # NearShare Cli
-Cross-platform command-line-interface to interop with the windows built-in nearby-sharing feature "Project Rome".    
-See the [Android App](https://github.com/nearby-sharing/android)!
+This repo contains a cross-platform command-line application that can be used to share files and urls between devices using the `Windows 10+` built-in sharing functionality (Aka [`Project Rome`]( https://github.com/microsoft/project-rome)).
 
-## Support
-- Network
-	- _All_
-- Bluetooth
-	- _None_
+> [!TIP]
+> Download the [Android App](https://nearshare.shortdev.de/docs/download)!
 
-## Build
-Download the dotnet 7 sdk and run `dotnet build`.
+> [!WARNING]
+> Currently only sending via Tcp (Local Network) is supported!
 
-## Run
-Execute `dotnet run` from the terminal.
+## Building
+This project consists of a `.NET 8` console application.   
+You can use the [`dotnet`](https://dotnet.microsoft.com/en-us/download) cli to build and run the app:
+```shell
+dotnet run
+```
