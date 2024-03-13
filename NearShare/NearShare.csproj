@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFrameworks>net8.0;net8.0-macos</TargetFrameworks>
+		<TargetFrameworks>net8.0;net8.0-windows10.0.22621.0;net8.0-macos</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -15,26 +15,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
 		<PackageReference Include="Spectre.Console" Version="0.48.0" />
 		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-		<PackageReference Include="Tmds.DBus.Protocol" Version="0.16.0" />
+		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
 		<ProjectReference Include="..\android\lib\ShortDev.Microsoft.ConnectedDevices.NearShare\ShortDev.Microsoft.ConnectedDevices.NearShare.csproj" />
 	</ItemGroup>
 
-	<!-- MacOs -->
-	<ItemGroup Condition="$(TargetFramework) == 'net8.0-macos' ">
+	<ItemGroup Label="MacOS" Condition="$(TargetFramework) == 'net8.0-macos' ">
 		<Reference Include="InTheHand.IOBluetooth">
 			<HintPath>InTheHand.IOBluetooth.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
-	<!-- Linux -->
-	<ItemGroup>
-		<PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.15">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
+	<ItemGroup Label="Linux">
 		<AdditionalFiles Include="Platforms\Linux\LEAdvertisement1.xml" DBusGeneratorMode="Handler" />
+		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
+	</ItemGroup>
+
+	<ItemGroup Label="Windows" Condition="$(TargetFramework) == 'net8.0-windows10.0.22621.0' ">
+		<ProjectReference Include="..\NearShare.Windows.Sender\NearShare.Windows.Sender.csproj" />
 	</ItemGroup>
 
 </Project>

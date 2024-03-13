@@ -1,5 +1,5 @@
-﻿
-using NearShare;
+﻿using NearShare;
+using NearShare.Commands;
 using Spectre.Console;
 using System.CommandLine;
 
@@ -10,7 +10,10 @@ AnsiConsole.Write(
 RootCommand root = new(description: "Cross-platform NearShare (Project Rome) cli")
 {
     Send.CreateCommand(),
-    Receive.CreateCommand()
+    Receive.CreateCommand(),
+#if WINDOWS
+    WindowsUtils.CreateRomeTestCommand(),
+#endif
 };
 
 await root.InvokeAsync(args);

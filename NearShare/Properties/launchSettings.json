@@ -11,6 +11,11 @@
     "NearShare Receive": {
       "commandName": "Project",
       "commandLineArgs": "receive --path \"%USERPROFILE%/Downloads\""
+    },
+    "Windows Watch": {
+      "commandName": "Project",
+      "commandLineArgs": "windows-watch-devices",
+      "nativeDebugging": true
     }
   }
 }
