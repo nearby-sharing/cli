@@ -2,8 +2,8 @@
 using NearShare.Platforms.Linux;
 using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Encryption;
-using ShortDev.Microsoft.ConnectedDevices.Platforms.Network;
-using ShortDev.Microsoft.ConnectedDevices.Transports;
+using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
+using ShortDev.Microsoft.ConnectedDevices.Transports.Network;
 using System.ComponentModel;
 using System.Net;
 using System.Runtime.InteropServices;

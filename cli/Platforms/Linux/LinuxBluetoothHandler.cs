@@ -1,8 +1,7 @@
 ﻿using Linux.Bluetooth;
 using ShortDev.Microsoft.ConnectedDevices;
-using ShortDev.Microsoft.ConnectedDevices.Platforms;
-using ShortDev.Microsoft.ConnectedDevices.Platforms.Bluetooth;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
+using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
 using System.Net.NetworkInformation;
 using System.Runtime.Versioning;
 using Tmds.DBus;
@@ -65,7 +64,7 @@ internal sealed class LinuxBluetoothHandler(Adapter adapter, ILEAdvertisingManag
         }
     }
 
-    public Task<CdpSocket> ConnectRfcommAsync(CdpDevice device, RfcommOptions options, CancellationToken cancellationToken = default)
+    public Task<CdpSocket> ConnectRfcommAsync(EndpointInfo device, RfcommOptions options, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

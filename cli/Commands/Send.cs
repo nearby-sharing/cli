@@ -1,6 +1,6 @@
 ﻿using NearShare.Commands;
+using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.NearShare;
-using ShortDev.Microsoft.ConnectedDevices.Platforms;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
 using Spectre.Console;
 using System.CommandLine;
