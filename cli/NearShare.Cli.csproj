@@ -22,6 +22,12 @@
 
 	<ItemGroup Label="Linux">
 		<AdditionalFiles Include="Platforms\Linux\LEAdvertisement1.xml" DBusGeneratorMode="Handler" />
+		<AdditionalFiles Include="Platforms\Linux\LEAdvertisingManager1.xml" DBusGeneratorMode="Proxy" />
+		<PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.16">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Tmds.DBus.Protocol" Version="0.16.0" />
+		<PackageReference Include="Tmds.DBus" Version="0.16.0" Aliases="DBusHighLevel" />
 		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
 	</ItemGroup>
 

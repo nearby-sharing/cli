@@ -1,35 +1,52 @@
-﻿using Linux.Bluetooth;
+﻿extern alias DBusHighLevel;
+
+using DBusHighLevel::Tmds.DBus;
+using Linux.Bluetooth;
 using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
 using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
+using Spectre.Console;
 using System.Net.NetworkInformation;
 using System.Runtime.Versioning;
-using Tmds.DBus;
 
 namespace NearShare.Platforms.Linux;
 
 [SupportedOSPlatform("linux")]
-internal sealed class LinuxBluetoothHandler(Adapter adapter, ILEAdvertisingManager1 advertisingManager) : IBluetoothHandler
+internal sealed class LinuxBluetoothHandler(Adapter adapter, PhysicalAddress macAddress) : IBluetoothHandler
 {
     readonly Adapter _adapter = adapter;
-    readonly ILEAdvertisingManager1 _advertisingManager = advertisingManager;
+    public PhysicalAddress MacAddress { get; } = macAddress;
 
     public static async ValueTask<LinuxBluetoothHandler> CreateAsync()
     {
-        var advertisingManager = Connection.System.CreateProxy<ILEAdvertisingManager1>("org.bluez", "/org/bluez/hci0");
-
         var adapters = await BlueZManager.GetAdaptersAsync();
-        return new(adapters.FirstOrDefault() ?? throw new InvalidOperationException("Could not get adapter"), advertisingManager);
+        var adapter = adapters.FirstOrDefault() ?? throw new InvalidOperationException("Could not get adapter");
+
+        var addressStr = await adapter.GetAddressAsync();
+        var macAddress = PhysicalAddress.Parse(addressStr);
+
+        return new(adapter, macAddress);
     }
 
-    public PhysicalAddress MacAddress => PhysicalAddress.None;
-
-    public Task AdvertiseBLeBeaconAsync(AdvertiseOptions options, CancellationToken cancellationToken = default)
+    public async Task AdvertiseBLeBeaconAsync(AdvertiseOptions options, CancellationToken cancellationToken = default)
     {
-        // ToDo: Implement
-        // _advertisingManager.RegisterAdvertisementAsync()
+        try
+        {
+            await _adapter.SetPoweredAsync(true);
+            await _adapter.SetDiscoverableAsync(true);
 
-        return Task.CompletedTask;
+            var advertisement = NearShareAdvertisement.Create(options);
+
+            await using var helper = await AdvertisingManager.CreateAsync(Address.System);
+            await helper.AdvertiseAsync(advertisement, cancellationToken);
+
+            await _adapter.SetDiscoverableAsync(false);
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.WriteException(ex);
+            throw;
+        }
     }
 
     public async Task ScanBLeAsync(ScanOptions scanOptions, CancellationToken cancellationToken = default)
