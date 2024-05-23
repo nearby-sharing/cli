@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<node>
+	<interface name="org.bluez.ProfileManager1">
+		<method name="RegisterProfile">
+			<arg name="profile" type="o" direction="in"/>
+			<arg name="UUID" type="s" direction="in"/>
+			<arg name="options" type="a{sv}" direction="in"/>
+			<annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+		</method>
+		<method name="UnregisterProfile">
+			<arg name="profile" type="o" direction="in"/>
+		</method>
+	</interface>
+</node>

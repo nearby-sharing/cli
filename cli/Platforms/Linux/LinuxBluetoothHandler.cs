@@ -2,6 +2,7 @@
 
 using DBusHighLevel::Tmds.DBus;
 using Linux.Bluetooth;
+using Linux.Bluetooth.Extensions;
 using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
 using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
@@ -81,9 +82,25 @@ internal sealed class LinuxBluetoothHandler(Adapter adapter, PhysicalAddress mac
         }
     }
 
-    public Task<CdpSocket> ConnectRfcommAsync(EndpointInfo device, RfcommOptions options, CancellationToken cancellationToken = default)
+    public async Task<CdpSocket> ConnectRfcommAsync(EndpointInfo endpoint, RfcommOptions options, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var device = await _adapter.GetDeviceAsync(endpoint.Address);
+
+        RfcommProfile profile = new(options.ServiceId!.Replace(":", "_").Replace("-", "_"));
+
+        await using var helper = await ProfileManager.CreateAsync(Address.System);
+        await helper.RegisterAsync(profile, cancellationToken);
+
+        await device.ConnectProfileAsync(options.ServiceName!);
+        var stream = await profile.ConnectionTask;
+
+        return new()
+        {
+            Endpoint = endpoint,
+            InputStream = stream,
+            OutputStream = stream,
+            Close = stream.Close
+        };
     }
 
     public Task ListenRfcommAsync(RfcommOptions options, CancellationToken cancellationToken = default)

@@ -23,6 +23,8 @@
 	<ItemGroup Label="Linux">
 		<AdditionalFiles Include="Platforms\Linux\LEAdvertisement1.xml" DBusGeneratorMode="Handler" />
 		<AdditionalFiles Include="Platforms\Linux\LEAdvertisingManager1.xml" DBusGeneratorMode="Proxy" />
+		<AdditionalFiles Include="Platforms\Linux\Profile1.xml" DBusGeneratorMode="Handler" />
+		<AdditionalFiles Include="Platforms\Linux\ProfileManager1.xml" DBusGeneratorMode="Proxy" />
 		<PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.16">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
