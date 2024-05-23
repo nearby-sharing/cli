@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Label="All Platforms">
-		<PackageReference Include="Spectre.Console" Version="0.48.0" />
+		<PackageReference Include="Spectre.Console" Version="0.49.1" />
 		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
 		<ProjectReference Include="..\android\lib\ShortDev.Microsoft.ConnectedDevices.NearShare\ShortDev.Microsoft.ConnectedDevices.NearShare.csproj" />
 	</ItemGroup>
@@ -26,8 +26,8 @@
 		<PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.16">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Tmds.DBus.Protocol" Version="0.16.0" />
-		<PackageReference Include="Tmds.DBus" Version="0.16.0" Aliases="DBusHighLevel" />
+		<PackageReference Include="Tmds.DBus.Protocol" Version="0.18.0" />
+		<PackageReference Include="Tmds.DBus" Version="0.18.0" Aliases="DBusHighLevel" />
 		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
 	</ItemGroup>
 

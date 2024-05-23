@@ -1,5 +1,5 @@
 ﻿using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
-using Spectre.Console;
+using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
@@ -19,23 +19,29 @@ internal sealed class NearShareAdvertisement : OrgBluezLEAdvertisement1
 
     public static NearShareAdvertisement Create(AdvertiseOptions options)
     {
-        var beaconData = options.BeaconData.ToArray();
-        AnsiConsole.WriteLine(BitConverter.ToString(beaconData));
-
-        NearShareAdvertisement advertisement = new();
-        advertisement.BackingProperties.LocalName = options.BeaconData.DeviceName;
-        advertisement.BackingProperties.Type = "peripheral";
-        advertisement.BackingProperties.ManufacturerData = new()
+        WriteableBuffer beaconData = new(options.BeaconData.ToArray());
+        return new()
         {
-            { (ushort)options.ManufacturerId, new("ay", new DBusByteArrayItem(beaconData)) }
+            LocalName = options.BeaconData.DeviceName,
+            Type = "peripheral",
+            ManufacturerData = new()
+            {
+                { (ushort)options.ManufacturerId, beaconData.AsVariant() }
+            }
         };
+    }
 
-        // Nullability
-        advertisement.BackingProperties.ServiceData = [];
-        advertisement.BackingProperties.ServiceUUIDs = [];
-        advertisement.BackingProperties.SolicitUUIDs = [];
-        advertisement.BackingProperties.Includes = [];
+    readonly struct WriteableBuffer(ReadOnlyMemory<byte> buffer) : IDBusWritable
+    {
+        readonly ReadOnlyMemory<byte> _buffer = buffer;
 
-        return advertisement;
+        public void WriteTo(ref MessageWriter writer)
+            => writer.WriteArray(_buffer.Span);
+
+        public Variant AsVariant()
+            => CreateVariant("ay"u8, this);
+
+        [UnsafeAccessor(UnsafeAccessorKind.Constructor)]
+        extern static Variant CreateVariant(Utf8Span signature, IDBusWritable value);
     }
 }
