@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<node>
+  <interface name="org.bluez.Battery1">
+    <property name="Percentage" type="y" access="read"></property>
+  </interface>
+</node>

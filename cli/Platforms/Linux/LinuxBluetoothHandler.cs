@@ -1,9 +1,4 @@
-﻿extern alias DBusHighLevel;
-
-using DBusHighLevel::Tmds.DBus;
-using Linux.Bluetooth;
-using Linux.Bluetooth.Extensions;
-using ShortDev.Microsoft.ConnectedDevices;
+﻿using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
 using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
 using Spectre.Console;
@@ -13,35 +8,35 @@ using System.Runtime.Versioning;
 namespace NearShare.Platforms.Linux;
 
 [SupportedOSPlatform("linux")]
-internal sealed class LinuxBluetoothHandler(Adapter adapter, PhysicalAddress macAddress) : IBluetoothHandler
+internal sealed class LinuxBluetoothHandler(BlueZManager manager, IAdapter1 adapter, PhysicalAddress macAddress) : IBluetoothHandler
 {
-    readonly Adapter _adapter = adapter;
+    readonly BlueZManager _manager = manager;
+    readonly IAdapter1 _adapter = adapter;
     public PhysicalAddress MacAddress { get; } = macAddress;
 
     public static async ValueTask<LinuxBluetoothHandler> CreateAsync()
     {
-        var adapters = await BlueZManager.GetAdaptersAsync();
+        var manager = await BlueZManager.CreateAsync();
+        var adapters = await manager.GetAdaptersAsync();
         var adapter = adapters.FirstOrDefault() ?? throw new InvalidOperationException("Could not get adapter");
 
-        var addressStr = await adapter.GetAddressAsync();
+        var addressStr = await adapter.GetAddressPropertyAsync();
         var macAddress = PhysicalAddress.Parse(addressStr);
 
-        return new(adapter, macAddress);
+        return new(manager, adapter, macAddress);
     }
 
     public async Task AdvertiseBLeBeaconAsync(AdvertiseOptions options, CancellationToken cancellationToken = default)
     {
         try
         {
-            await _adapter.SetPoweredAsync(true);
-            await _adapter.SetDiscoverableAsync(true);
+            await _adapter.SetPoweredPropertyAsync(true);
+            await _adapter.SetDiscoverablePropertyAsync(true);
 
             var advertisement = NearShareAdvertisement.Create(options);
+            await _manager.AdvertiseAsync(advertisement, cancellationToken);
 
-            await using var helper = await AdvertisingManager.CreateAsync(Address.System);
-            await helper.AdvertiseAsync(advertisement, cancellationToken);
-
-            await _adapter.SetDiscoverableAsync(false);
+            await _adapter.SetDiscoverablePropertyAsync(false);
         }
         catch (Exception ex)
         {
@@ -52,30 +47,36 @@ internal sealed class LinuxBluetoothHandler(Adapter adapter, PhysicalAddress mac
 
     public async Task ScanBLeAsync(ScanOptions scanOptions, CancellationToken cancellationToken = default)
     {
-        await _adapter.SetPoweredAsync(true);
-        await _adapter.SetDiscoveryFilterAsync(new Dictionary<string, object>()
+        await _adapter.SetPoweredPropertyAsync(true);
+        await _adapter.SetDiscoveryFilterAsync(new()
         {
             { "Transport", "le" },
             { "DuplicateData", false }
         });
 
         await _adapter.StartDiscoveryAsync();
-        _adapter.DeviceFound += OnDeviceFound;
+
+        await foreach (var device in _manager.GetDevicesAsync())
+            await ParseDeviceAsync(device);
+        using var watcher = await _manager.ObjectManager.WatchInterfacesAddedAsync((ex, changes) =>
+        {
+            if (!changes.InterfacesAndProperties.ContainsKey("org.bluez.Device1"))
+                return;
+
+            _ = ParseDeviceAsync(new(_manager.Connection, "org.bluez", changes.ObjectPath));
+        });
 
         await cancellationToken.AwaitCancellation();
 
         await _adapter.StopDiscoveryAsync();
 
-        async Task OnDeviceFound(Adapter sender, DeviceFoundEventArgs eventArgs)
-            => await ParseDeviceAsync(eventArgs.Device);
-
-        async Task ParseDeviceAsync(Device device)
+        async Task ParseDeviceAsync(IDevice1 device)
         {
-            var data = await device.GetManufacturerDataAsync();
+            var data = await device.GetManufacturerDataPropertyAsync();
             if (!data.TryGetValue(Constants.BLeBeaconManufacturerId, out var beaconData))
                 return;
 
-            if (!BLeBeacon.TryParse((byte[])beaconData, out var beacon))
+            if (!BLeBeacon.TryParse(beaconData.GetArray<byte>(), out var beacon))
                 return;
 
             scanOptions.OnDeviceDiscovered?.Invoke(beacon);
@@ -84,16 +85,9 @@ internal sealed class LinuxBluetoothHandler(Adapter adapter, PhysicalAddress mac
 
     public async Task<CdpSocket> ConnectRfcommAsync(EndpointInfo endpoint, RfcommOptions options, CancellationToken cancellationToken = default)
     {
-        var device = await _adapter.GetDeviceAsync(endpoint.Address);
+        var device = await _manager.GetDeviceAsync(endpoint.Address);
 
-        RfcommProfile profile = new(options.ServiceId!.Replace(":", "_").Replace("-", "_"));
-
-        await using var helper = await ProfileManager.CreateAsync(Address.System);
-        await helper.RegisterAsync(profile, cancellationToken);
-
-        await device.ConnectProfileAsync(options.ServiceName!);
-        var stream = await profile.ConnectionTask;
-
+        var stream = await _manager.CreateRfcommSocketAsync(device, options.ServiceId!);
         return new()
         {
             Endpoint = endpoint,

@@ -1,4 +1,6 @@
-﻿using System.Net.Sockets;
+﻿using Spectre.Console;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
@@ -6,7 +8,7 @@ namespace NearShare.Platforms.Linux;
 internal sealed class RfcommProfile(string uuid) : OrgBluezProfile1, IMethodHandler
 {
     protected override Connection Connection => throw new NotImplementedException();
-    public override string Path { get; } = $"/org/bluez/nearshare/profile/{uuid}";
+    public override string Path { get; } = $"/org/bluez/nearshare/profile/{uuid.Replace(":", "_").Replace("-", "_")}";
     public string Uuid { get; } = uuid;
 
     async ValueTask IMethodHandler.HandleMethodAsync(MethodContext context)
@@ -56,8 +58,11 @@ internal sealed class RfcommProfile(string uuid) : OrgBluezProfile1, IMethodHand
         {
             ArgumentNullException.ThrowIfNull(fd);
 
+            AnsiConsole.WriteLine($"Got fd: {fd.DangerousGetHandle()}");
+            AnsiConsole.WriteLine(string.Join(',', properties.Keys));
+
             Socket socket = new(fd);
-            NetworkStream stream = new(socket, ownsSocket: true);
+            NetworkStream stream = new(socket, ownsSocket: false);
             _promise.TrySetResult(stream);
         }
         catch (Exception ex)
@@ -69,6 +74,7 @@ internal sealed class RfcommProfile(string uuid) : OrgBluezProfile1, IMethodHand
     protected override ValueTask OnRequestDisconnectionAsync(ObjectPath arg0)
     {
         // ToDo
+        AnsiConsole.WriteLine($"Request disconnect for {arg0}");
         return ValueTask.CompletedTask;
     }
 

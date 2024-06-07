@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NearShare.Platforms.Linux;
+using Serilog;
 using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Encryption;
 using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
@@ -20,7 +21,9 @@ internal static partial class CdpUtils
         else if (OperatingSystem.IsMacOS())
             deviceType = DeviceType.iPad; // ToDo: Is there an entry for MacOs?
 
-        var loggerFactory = LoggerFactory.Create(builder => { });
+        var loggerFactory = LoggerFactory.Create(builder => {
+            builder.AddConsole();
+        });
 
         ConnectedDevicesPlatform cdp = new(new()
         {

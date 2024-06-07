@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<node>
+  <interface name="org.bluez.GattService1">
+    <property name="UUID" type="s" access="read"></property>
+    <property name="Device" type="o" access="read"></property>
+    <property name="Primary" type="b" access="read"></property>
+    <property name="Includes" type="ao" access="read"></property>
+  </interface>
+</node>
