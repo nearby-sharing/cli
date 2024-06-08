@@ -1,18 +1,27 @@
-﻿using ShortDev.Microsoft.ConnectedDevices;
+﻿using NearShare.Linux.Bluetooth;
+using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
 using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
 using Spectre.Console;
 using System.Net.NetworkInformation;
 using System.Runtime.Versioning;
+using Tmds.DBus.Protocol;
 
 namespace NearShare.Platforms.Linux;
 
 [SupportedOSPlatform("linux")]
-internal sealed class LinuxBluetoothHandler(BlueZManager manager, IAdapter1 adapter, PhysicalAddress macAddress) : IBluetoothHandler
+public sealed class LinuxBluetoothHandler : IBluetoothHandler
 {
-    readonly BlueZManager _manager = manager;
-    readonly IAdapter1 _adapter = adapter;
-    public PhysicalAddress MacAddress { get; } = macAddress;
+    readonly BlueZManager _manager;
+    readonly IAdapter1 _adapter;
+    private LinuxBluetoothHandler(BlueZManager manager, IAdapter1 adapter, PhysicalAddress macAddress)
+    {
+        _manager = manager;
+        _adapter = adapter;
+        MacAddress = macAddress;
+    }
+
+    public PhysicalAddress MacAddress { get; }
 
     public static async ValueTask<LinuxBluetoothHandler> CreateAsync()
     {
@@ -40,12 +49,24 @@ internal sealed class LinuxBluetoothHandler(BlueZManager manager, IAdapter1 adap
         }
         catch (Exception ex)
         {
-            AnsiConsole.WriteException(ex);
+            Console.WriteLine(ex);
             throw;
         }
     }
 
     public async Task ScanBLeAsync(ScanOptions scanOptions, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await ScanInternal(scanOptions, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.WriteException(ex);
+        }
+    }
+
+    async Task ScanInternal(ScanOptions scanOptions, CancellationToken cancellationToken = default)
     {
         await _adapter.SetPoweredPropertyAsync(true);
         await _adapter.SetDiscoveryFilterAsync(new()
@@ -54,32 +75,37 @@ internal sealed class LinuxBluetoothHandler(BlueZManager manager, IAdapter1 adap
             { "DuplicateData", false }
         });
 
-        await _adapter.StartDiscoveryAsync();
-
-        await foreach (var device in _manager.GetDevicesAsync())
-            await ParseDeviceAsync(device);
         using var watcher = await _manager.ObjectManager.WatchInterfacesAddedAsync((ex, changes) =>
         {
-            if (!changes.InterfacesAndProperties.ContainsKey("org.bluez.Device1"))
+            if (!changes.InterfacesAndProperties.TryGetValue("org.bluez.Device1", out var props))
                 return;
 
-            _ = ParseDeviceAsync(new(_manager.Connection, "org.bluez", changes.ObjectPath));
+            if (!props.TryGetValue("ManufacturerData", out var manufacturerData))
+                return;
+
+            ParseDevice(manufacturerData.GetDictionary<ushort, VariantValue>());
         });
 
+        await _adapter.StartDiscoveryAsync();
         await cancellationToken.AwaitCancellation();
-
         await _adapter.StopDiscoveryAsync();
 
-        async Task ParseDeviceAsync(IDevice1 device)
+        void ParseDevice(Dictionary<ushort, VariantValue> manufacturerData)
         {
-            var data = await device.GetManufacturerDataPropertyAsync();
-            if (!data.TryGetValue(Constants.BLeBeaconManufacturerId, out var beaconData))
-                return;
+            try
+            {
+                if (manufacturerData.TryGetValue(Constants.BLeBeaconManufacturerId, out var beaconData) != true)
+                    return;
 
-            if (!BLeBeacon.TryParse(beaconData.GetArray<byte>(), out var beacon))
-                return;
+                if (!BLeBeacon.TryParse(beaconData.GetArray<byte>(), out var beacon))
+                    return;
 
-            scanOptions.OnDeviceDiscovered?.Invoke(beacon);
+                scanOptions.OnDeviceDiscovered?.Invoke(beacon);
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.WriteException(ex);
+            }
         }
     }
 

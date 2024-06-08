@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using NearShare.Platforms.Linux;
-using Serilog;
 using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Encryption;
 using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;

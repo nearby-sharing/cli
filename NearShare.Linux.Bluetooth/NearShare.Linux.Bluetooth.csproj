@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup Label="DBus">
+		<AdditionalFiles Include="DBus\Handlers\*.xml" DBusGeneratorMode="Handler" />
+		<AdditionalFiles Include="DBus\Proxies\*.xml" DBusGeneratorMode="Proxy" />
+		<PackageReference Include="Spectre.Console" Version="0.49.1" />
+		<PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.16">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Tmds.DBus.Protocol" Version="0.18.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\android\lib\ShortDev.Microsoft.ConnectedDevices\ShortDev.Microsoft.ConnectedDevices.csproj" />
+	</ItemGroup>
+
+</Project>

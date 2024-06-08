@@ -9,7 +9,7 @@ namespace NearShare.Platforms.Linux;
 [SupportedOSPlatform("linux")]
 internal sealed class NearShareAdvertisement : OrgBluezLEAdvertisement1
 {
-    public const string ObjectPath = "/org/bluez/nearshare/advertisement0";
+    public const string ObjectPath = "/de/shortdev/nearshare/advertisement0";
 
     protected override Connection Connection => throw new NotImplementedException();
     public override string Path { get; } = ObjectPath;

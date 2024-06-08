@@ -1,7 +1,10 @@
 ﻿using ShortDev.Microsoft.ConnectedDevices;
+using System.Runtime.Versioning;
 using Tmds.DBus.Protocol;
 
-namespace NearShare.Platforms.Linux;
+namespace NearShare.Linux.Bluetooth;
+
+[SupportedOSPlatform("linux")]
 internal sealed class BlueZManager(Connection connection)
 {
     public Connection Connection { get; } = connection;

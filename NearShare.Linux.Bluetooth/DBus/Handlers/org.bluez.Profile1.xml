@@ -3,7 +3,7 @@
   <interface name="org.bluez.Profile1">
     <method name="NewConnection">
       <arg type="o" direction="in"/>
-      <arg type="u" direction="in"/>
+      <arg type="h" direction="in"/>
       <arg type="a{sv}" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
     </method>

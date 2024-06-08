@@ -22,12 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="Linux">
-		<AdditionalFiles Include="DBus\Handlers\*.xml" DBusGeneratorMode="Handler" />
-		<AdditionalFiles Include="DBus\Proxies\*.xml" DBusGeneratorMode="Proxy" />
-		<PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.16">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="Tmds.DBus.Protocol" Version="0.18.0" />
+		<ProjectReference Include="..\NearShare.Linux.Bluetooth\NearShare.Linux.Bluetooth.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Label="Windows" Condition="$(TargetFramework) == 'net8.0-windows10.0.22621.0' ">
