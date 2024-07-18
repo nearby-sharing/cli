@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1FCBB392
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "windows", "windows", "{6E6B2B28-5188-41B5-BC19-AA007A1017FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NearShare.Windows.SocketBroker", "windows\NearShare.Windows.SocketBroker\NearShare.Windows.SocketBroker.csproj", "{A39016F4-013F-4180-B873-9604FA7B0D06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{4D062C01-B802-454A-9AFB-D3C732AB45AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D062C01-B802-454A-9AFB-D3C732AB45AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D062C01-B802-454A-9AFB-D3C732AB45AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A39016F4-013F-4180-B873-9604FA7B0D06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A39016F4-013F-4180-B873-9604FA7B0D06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A39016F4-013F-4180-B873-9604FA7B0D06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A39016F4-013F-4180-B873-9604FA7B0D06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 		{0D0E4BB9-187C-4719-8F44-1F81F0E87B95} = {3FF522B9-6238-46CD-8BEA-0F94B3B1E5E8}
 		{A7A88583-C292-4B94-A961-17456CF58A6F} = {3FF522B9-6238-46CD-8BEA-0F94B3B1E5E8}
 		{4D062C01-B802-454A-9AFB-D3C732AB45AD} = {6E6B2B28-5188-41B5-BC19-AA007A1017FF}
+		{A39016F4-013F-4180-B873-9604FA7B0D06} = {6E6B2B28-5188-41B5-BC19-AA007A1017FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {40C92CC2-DA64-490D-B7F5-E3A1A3C579BC}
