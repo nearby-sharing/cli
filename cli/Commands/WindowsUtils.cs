@@ -1,6 +1,7 @@
 ﻿#if WINDOWS
 using NearShare.Windows.Sender;
 using NearShare.Windows.WiFiDirect;
+using ShortDev.Microsoft.ConnectedDevices;
 using Spectre.Console;
 using System.CommandLine;
 using System.Net.NetworkInformation;
@@ -43,10 +44,26 @@ internal static class WindowsUtils
         return command;
     }
 
+    public static Command CreateWfdLogsTestCommand()
+    {
+        Command command = new("windows-wfd-logs");
+        command.SetHandler(async ctx =>
+        {
+            using var handle = WiFiDirectHandle.Open();
+            handle.Notification += (ref WFDNotificationData data, nint context) =>
+            {
+                Console.WriteLine($"Notification: {data.NotificationCode}, Source: {data.NotificationSource}");
+            };
+
+            await ctx.GetCancellationToken().AwaitCancellation();
+        });
+        return command;
+    }
+
     public static Command CreateWfdGoTestCommand()
     {
         Command command = new("windows-wfd-go");
-        command.SetHandler(async () =>
+        command.SetHandler(async ctx =>
         {
             using var handle = WiFiDirectHandle.Open();
             handle.Notification += (ref WFDNotificationData data, nint context) =>
@@ -56,7 +73,7 @@ internal static class WindowsUtils
 
             using var group = WiFiDirectGroup.Start(handle);
 
-            await Task.Delay(100_000);
+            await ctx.GetCancellationToken().AwaitCancellation();
         });
         return command;
     }

@@ -17,6 +17,11 @@
       "commandLineArgs": "windows-watch-devices",
       "nativeDebugging": true
     },
+    "WFD Logs": {
+      "commandName": "Project",
+      "commandLineArgs": "windows-wfd-logs",
+      "nativeDebugging": true
+    },
     "WFD GO": {
       "commandName": "Project",
       "commandLineArgs": "windows-wfd-go",
