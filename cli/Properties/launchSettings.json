@@ -16,6 +16,16 @@
       "commandName": "Project",
       "commandLineArgs": "windows-watch-devices",
       "nativeDebugging": true
+    },
+    "WFD GO": {
+      "commandName": "Project",
+      "commandLineArgs": "windows-wfd-go",
+      "nativeDebugging": true
+    },
+    "WFD Connect": {
+      "commandName": "Project",
+      "commandLineArgs": "windows-wfd-connect 8c:b8:4a:5d:47:50",
+      "nativeDebugging": true
     }
   }
 }

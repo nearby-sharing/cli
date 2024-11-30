@@ -1,0 +1,7 @@
+﻿WFDOpenHandle
+WFDCloseHandle
+WFDStartOpenSession
+WFD_API_VERSION
+IInspectable
+L2_NOTIFICATION_DATA
+HRESULT
