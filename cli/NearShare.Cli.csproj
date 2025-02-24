@@ -2,19 +2,20 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFrameworks>net8.0;net8.0-windows10.0.22621.0</TargetFrameworks>
+		<TargetFrameworks>net9.0;net9.0-windows10.0.22621.0</TargetFrameworks>
 		<Version>0.0.1</Version>
 		<RootNamespace>NearShare</RootNamespace>
 		<AssemblyName>NearShare</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup Label="All Platforms">
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
 		<PackageReference Include="Spectre.Console" Version="0.48.0" />
 		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
 		<ProjectReference Include="..\android\lib\ShortDev.Microsoft.ConnectedDevices.NearShare\ShortDev.Microsoft.ConnectedDevices.NearShare.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Label="Windows" Condition="$(TargetFramework) == 'net8.0-windows10.0.22621.0' ">
+	<ItemGroup Label="Windows" Condition="$(TargetFramework) == 'net9.0-windows10.0.22621.0' ">
 		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
 		<ProjectReference Include="..\windows\NearShare.Windows.Sender\NearShare.Windows.Sender.csproj" />
 		<ProjectReference Include="..\windows\NearShare.Windows.WiFiDirect\NearShare.Windows.WiFiDirect.csproj" />
