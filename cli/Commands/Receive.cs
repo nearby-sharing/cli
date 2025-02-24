@@ -1,11 +1,10 @@
-﻿using NearShare.Commands;
-using ShortDev.Microsoft.ConnectedDevices;
+﻿using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.NearShare;
 using Spectre.Console;
 using System.CommandLine;
 using System.Diagnostics;
 
-namespace NearShare;
+namespace NearShare.Commands;
 
 internal class Receive : INearShareCommand
 {

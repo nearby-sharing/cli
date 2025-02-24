@@ -1,11 +1,10 @@
-﻿using NearShare.Commands;
-using ShortDev.Microsoft.ConnectedDevices;
+﻿using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.NearShare;
 using ShortDev.Microsoft.ConnectedDevices.Transports;
 using Spectre.Console;
 using System.CommandLine;
 
-namespace NearShare;
+namespace NearShare.Commands;
 
 internal class Send : INearShareCommand
 {

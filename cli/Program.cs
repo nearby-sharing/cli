@@ -1,5 +1,4 @@
-﻿using NearShare;
-using NearShare.Commands;
+﻿using NearShare.Commands;
 using Spectre.Console;
 using System.CommandLine;
 
@@ -19,4 +18,4 @@ RootCommand root = new(description: "Cross-platform NearShare (Project Rome) cli
 #endif
 };
 
-await root.InvokeAsync(args);
+return await root.InvokeAsync(args);
