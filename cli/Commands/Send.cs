@@ -52,7 +52,7 @@ internal class Send : INearShareCommand
                 return;
             }
 
-            using var cdp = await CdpUtils.CreatePlatformAsync(deviceName);
+            using var cdp = CdpUtils.CreatePlatform(deviceName);
 
             HashSet<CdpDevice> devices = [];
             void OnDeviceDiscovered(ICdpTransport sender, CdpDevice device)

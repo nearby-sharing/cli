@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using NearShare.Platforms.Linux;
 using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.Encryption;
-using ShortDev.Microsoft.ConnectedDevices.Transports.Bluetooth;
 using ShortDev.Microsoft.ConnectedDevices.Transports.Network;
 using System.ComponentModel;
 using System.Net;
@@ -12,7 +10,7 @@ using System.Runtime.Versioning;
 namespace NearShare;
 internal static partial class CdpUtils
 {
-    public static async ValueTask<ConnectedDevicesPlatform> CreatePlatformAsync(string? deviceName)
+    public static ConnectedDevicesPlatform CreatePlatform(string? deviceName)
     {
         DeviceType deviceType = DeviceType.Linux;
         if (OperatingSystem.IsWindows())
@@ -33,12 +31,6 @@ internal static partial class CdpUtils
 
         NetworkHandler networkHandler = new();
         cdp.AddTransport<NetworkTransport>(new(networkHandler));
-
-        if (OperatingSystem.IsLinux())
-        {
-            var btHandler = await LinuxBluetoothHandler.CreateAsync();
-            cdp.AddTransport<BluetoothTransport>(new(btHandler));
-        }
 
         return cdp;
     }

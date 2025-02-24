@@ -14,17 +14,6 @@
 		<ProjectReference Include="..\android\lib\ShortDev.Microsoft.ConnectedDevices.NearShare\ShortDev.Microsoft.ConnectedDevices.NearShare.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Label="MacOS" Condition="$(TargetFramework) == 'net8.0-macos' ">
-		<Reference Include="InTheHand.IOBluetooth">
-			<HintPath>InTheHand.IOBluetooth.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup Label="Linux">
-		<AdditionalFiles Include="Platforms\Linux\LEAdvertisement1.xml" DBusGeneratorMode="Handler" />
-		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
-	</ItemGroup>
-
 	<ItemGroup Label="Windows" Condition="$(TargetFramework) == 'net8.0-windows10.0.22621.0' ">
 		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
 		<ProjectReference Include="..\windows\NearShare.Windows.Sender\NearShare.Windows.Sender.csproj" />

@@ -35,7 +35,7 @@ internal class Receive : INearShareCommand
         };
         command.SetHandler(async (path, deviceName, force) =>
         {
-            using var cdp = await CdpUtils.CreatePlatformAsync(deviceName);
+            using var cdp = CdpUtils.CreatePlatform(deviceName);
 
             CancellationTokenSource tokenSource = new();
             cdp.Listen(tokenSource.Token);
