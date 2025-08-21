@@ -5,6 +5,7 @@ using ShortDev.Microsoft.ConnectedDevices;
 using Spectre.Console;
 using System.CommandLine;
 using System.Net.NetworkInformation;
+using Windows.ApplicationModel.Internal.DataTransfer.NearShare;
 using Windows.System.RemoteSystems;
 
 namespace NearShare.Commands;
@@ -35,7 +36,22 @@ internal static class WindowsUtils
             async void Watcher_RemoteSystemAdded(RemoteSystemWatcher sender, RemoteSystemAddedEventArgs args)
             {
                 AnsiConsole.WriteLine($"Added {args.RemoteSystem.DisplayName} {args.RemoteSystem.Id}");
-                await NearShareSender.SendAsync(args.RemoteSystem, new("https://shortdev.de"));
+
+                Progress<SendDataProgress> progress = new();
+                progress.ProgressChanged += OnProgress;
+                try
+                {
+                    await NearShareSender.SendAsync(args.RemoteSystem, new Uri("https://shortdev.de"), progress);
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                static void OnProgress(object? sender, SendDataProgress e)
+                {
+
+                }
             }
 
             AutoResetEvent @event = new(false);
