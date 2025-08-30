@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShortDev.Microsoft.Connecte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShortDev.Microsoft.ConnectedDevices.NearShare", "android\lib\ShortDev.Microsoft.ConnectedDevices.NearShare\ShortDev.Microsoft.ConnectedDevices.NearShare.csproj", "{A7A88583-C292-4B94-A961-17456CF58A6F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NearShare.Windows.Sender", "windows\NearShare.Windows.Sender\NearShare.Windows.Sender.csproj", "{4D062C01-B802-454A-9AFB-D3C732AB45AD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1FCBB392-F297-4E90-9378-97C0A696F0CB}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
@@ -42,10 +40,6 @@ Global
 		{A7A88583-C292-4B94-A961-17456CF58A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7A88583-C292-4B94-A961-17456CF58A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7A88583-C292-4B94-A961-17456CF58A6F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D062C01-B802-454A-9AFB-D3C732AB45AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D062C01-B802-454A-9AFB-D3C732AB45AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D062C01-B802-454A-9AFB-D3C732AB45AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D062C01-B802-454A-9AFB-D3C732AB45AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A39016F4-013F-4180-B873-9604FA7B0D06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A39016F4-013F-4180-B873-9604FA7B0D06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A39016F4-013F-4180-B873-9604FA7B0D06}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -61,7 +55,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0D0E4BB9-187C-4719-8F44-1F81F0E87B95} = {3FF522B9-6238-46CD-8BEA-0F94B3B1E5E8}
 		{A7A88583-C292-4B94-A961-17456CF58A6F} = {3FF522B9-6238-46CD-8BEA-0F94B3B1E5E8}
-		{4D062C01-B802-454A-9AFB-D3C732AB45AD} = {6E6B2B28-5188-41B5-BC19-AA007A1017FF}
 		{A39016F4-013F-4180-B873-9604FA7B0D06} = {6E6B2B28-5188-41B5-BC19-AA007A1017FF}
 		{813F128B-2320-4B9A-B7A4-C09993152F14} = {6E6B2B28-5188-41B5-BC19-AA007A1017FF}
 	EndGlobalSection

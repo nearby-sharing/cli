@@ -12,11 +12,6 @@
       "commandName": "Project",
       "commandLineArgs": "receive --path \"%USERPROFILE%/Downloads\""
     },
-    "Windows Watch": {
-      "commandName": "Project",
-      "commandLineArgs": "windows-watch-devices",
-      "nativeDebugging": true
-    },
     "WFD Logs": {
       "commandName": "Project",
       "commandLineArgs": "windows-wfd-logs",

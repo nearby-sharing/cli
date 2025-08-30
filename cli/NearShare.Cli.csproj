@@ -17,7 +17,6 @@
 
 	<ItemGroup Label="Windows" Condition="$(TargetFramework) == 'net9.0-windows10.0.22621.0' ">
 		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
-		<ProjectReference Include="..\windows\NearShare.Windows.Sender\NearShare.Windows.Sender.csproj" />
 		<ProjectReference Include="..\windows\NearShare.Windows.WiFiDirect\NearShare.Windows.WiFiDirect.csproj" />
 	</ItemGroup>
 

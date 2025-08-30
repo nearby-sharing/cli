@@ -12,7 +12,6 @@ RootCommand root = new(description: "Cross-platform NearShare (Project Rome) cli
     Receive.CreateCommand(),
 #if WINDOWS
     WindowsUtils.CreateWfdLogsTestCommand(),
-    WindowsUtils.CreateRomeTestCommand(),
     WindowsUtils.CreateWfdGoTestCommand(),
     WindowsUtils.CreateWfdConnectTestCommand(),
 #endif
