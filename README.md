@@ -1,8 +1,8 @@
 # NearShare Cli
 This repo contains a cross-platform command-line application that can be used to share files and urls between devices using the `Windows 10+` built-in sharing functionality (Aka [`Project Rome`]( https://github.com/microsoft/project-rome)).
 
-> [!TIP]
-> Download the [Android App](https://nearshare.shortdev.de/docs/download)!
+<a href="https://github.com/nearby-sharing/cli/releases/latest" target="_blank" rel="noopener noreferrer"><img src="https://cdn.shortdev.de/badges/github-releases.svg" width="200"/></a>
+<a href="https://nearshare.shortdev.de/download/" target="_blank" rel="noopener noreferrer"><img src="https://cdn.shortdev.de/badges/other-platforms.svg" width="200"/></a>
 
 > [!WARNING]
 > Currently only sending via Tcp (Local Network) is supported!
@@ -13,3 +13,7 @@ You can use the [`dotnet`](https://dotnet.microsoft.com/en-us/download) cli to b
 ```shell
 dotnet run
 ```
+
+## License
+
+This project is licensed under the [GPL-3.0 license](./LICENSE.txt).
