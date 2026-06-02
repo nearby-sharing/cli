@@ -1,0 +1,14 @@
+[Desktop Entry]
+#KDE: place in ~/.local/share/kio/servicemenus/ to show in context menu
+Type=Service
+Actions=file;
+MimeType=all/allfiles;
+#X-KDE-Submenu=Nearby Share
+Terminal=true
+#TerminalOptions=\s--noclose
+
+[Desktop Action file]
+Name=Nearby share file...
+#place NearShare execuable in bin path i.e. /usr/local/bin/
+Exec=NearShare send --file %f
+Icon=preferences-system-network-share-windows
