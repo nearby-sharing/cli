@@ -1,0 +1,12 @@
+[Desktop Entry]
+#desktop entry to use Windows Nearby share capability to send last clipboard entry using wl-paste
+Name=Nearby Share - Send last clipboard entry...
+#executable can be obtained from https://github.com/nearby-sharing/cli
+Exec=/usr/local/bin/NearShare send --url "$(wl-paste -n -t 'text/plain;charset=utf-8')"
+#will silently fail if last clipboard entry is not text
+Type=Application
+Categories=Utility
+Icon=edit-paste-symbolic
+Terminal=true
+TerminalOptions=\s--noclose
+NoDisplay=false

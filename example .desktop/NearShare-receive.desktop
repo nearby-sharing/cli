@@ -1,0 +1,11 @@
+[Desktop Entry]
+#desktop entry to advertise Windows Nearby share capability and receive files to ~/Downloads/
+Name=Nearby Share - Receive
+#executable can be obtained from https://github.com/nearby-sharing/cli
+Exec=/usr/local/bin/NearShare receive --path ~/Downloads/
+Type=Application
+Categories=Utility
+Icon=mail-receive
+Terminal=true
+NoDisplay=false
+#allow ports 5040/tcp and 5050/udp
