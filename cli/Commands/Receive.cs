@@ -11,30 +11,38 @@ internal class Receive : INearShareCommand
 {
     public static Command CreateCommand()
     {
-        Option<string> path = new("--path", description: "Directory files should be saved to")
+        Option<string> pathOption = new("--path", "-p")
         {
-            IsRequired = true,
+            Required = true,
+            Description = "Directory files should be saved to. Only used for file transfers."
         };
-        path.AddAlias("-p");
 
-        Option<string> deviceName = new("--deviceName", description: "DeviceName used for advertisement")
+        Option<string> deviceNameOption = new("--deviceName", "-n")
         {
-            IsRequired = false,
+            Required = false,
+            Description = "DeviceName used for advertisement. If not specified, the device name from the platform will be used.",
+            DefaultValueFactory = _ => Environment.MachineName
         };
-        deviceName.AddAlias("-n");
 
-        Option<bool> forceOption = new("--force", description: "Whether to not show a confirm for file transfers")
+        Option<bool> forceOption = new("--force", "-f")
         {
-            IsRequired = false,
+            Required = false,
+            Description = "Whether to not show a confirm for file transfers",
+            DefaultValueFactory = _ => false
         };
 
         Command command = new("receive", description: "Receive from a remote device")
         {
-            path,
-            deviceName
+            pathOption,
+            deviceNameOption,
+            forceOption
         };
-        command.SetHandler(async (path, deviceName, force) =>
+        command.SetAction(async ctx =>
         {
+            var path = ctx.GetRequiredValue(pathOption);
+            var deviceName = ctx.GetRequiredValue(deviceNameOption);
+            var force = ctx.GetRequiredValue(forceOption);
+
             using var cdp = CdpUtils.CreatePlatform(deviceName);
 
             CancellationTokenSource tokenSource = new();
@@ -54,7 +62,7 @@ internal class Receive : INearShareCommand
                 if (!force && !AnsiConsole.Confirm($"Do you want to receive file \"{Markup.Escape(string.Join(", ", fileTransfer.Select(x => x.Name)))}\" from {Markup.Escape(fileTransfer.DeviceName)}?", defaultValue: true))
                 {
                     fileTransfer.Cancel();
-                    return;
+                    return -1;
                 }
 
                 fileTransfer.Accept(
@@ -83,7 +91,8 @@ internal class Receive : INearShareCommand
             else
                 throw new UnreachableException();
 
-        }, path, deviceName, forceOption);
+            return 0;
+        });
         return command;
     }
 

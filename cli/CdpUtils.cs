@@ -8,10 +8,13 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace NearShare;
+
 internal static partial class CdpUtils
 {
-    public static ConnectedDevicesPlatform CreatePlatform(string? deviceName)
+    public static ConnectedDevicesPlatform CreatePlatform(string deviceName)
     {
+        ArgumentNullException.ThrowIfNull(deviceName);
+
         DeviceType deviceType = DeviceType.Linux;
         if (OperatingSystem.IsWindows())
             deviceType = DeviceType.Windows10Desktop;
@@ -22,7 +25,7 @@ internal static partial class CdpUtils
 
         ConnectedDevicesPlatform cdp = new(new()
         {
-            Name = string.IsNullOrEmpty(deviceName) ? Environment.MachineName : deviceName,
+            Name = deviceName,
             OemManufacturerName = Environment.UserName,
             OemModelName = Environment.UserDomainName,
             Type = deviceType,

@@ -5,12 +5,13 @@ using System.CommandLine;
 using System.Net.NetworkInformation;
 
 namespace NearShare.Commands;
+
 internal static class WindowsUtils
 {
     public static Command CreateWfdLogsTestCommand()
     {
         Command command = new("windows-wfd-logs");
-        command.SetHandler(async ctx =>
+        command.SetAction(async (ctx, cancellation) =>
         {
             using var handle = WiFiDirectHandle.Open();
             handle.Notification += (ref WFDNotificationData data, nint context) =>
@@ -18,7 +19,7 @@ internal static class WindowsUtils
                 Console.WriteLine($"Notification: {data.NotificationCode}, Source: {data.NotificationSource}");
             };
 
-            await ctx.GetCancellationToken().AwaitCancellation();
+            await cancellation.AwaitCancellation();
         });
         return command;
     }
@@ -26,7 +27,7 @@ internal static class WindowsUtils
     public static Command CreateWfdGoTestCommand()
     {
         Command command = new("windows-wfd-go");
-        command.SetHandler(async ctx =>
+        command.SetAction(async (ctx, cancellation) =>
         {
             using var handle = WiFiDirectHandle.Open();
             handle.Notification += (ref WFDNotificationData data, nint context) =>
@@ -36,22 +37,27 @@ internal static class WindowsUtils
 
             using var group = WiFiDirectGroup.Start(handle);
 
-            await ctx.GetCancellationToken().AwaitCancellation();
+            await cancellation.AwaitCancellation();
         });
         return command;
     }
 
     public static Command CreateWfdConnectTestCommand()
     {
-        Argument<PhysicalAddress> addressOption = new("address", value => PhysicalAddress.Parse(value.Tokens[0].Value));
+        Argument<PhysicalAddress> addressOption = new("address")
+        {
+            DefaultValueFactory = value => PhysicalAddress.Parse(value.Tokens[0].Value)
+        };
 
         Command command = new("windows-wfd-connect")
         {
             addressOption
         };
 
-        command.SetHandler(async address =>
+        command.SetAction(async ctx =>
         {
+            var address = ctx.GetRequiredValue(addressOption);
+
             using var handle = WiFiDirectHandle.Open();
             handle.Notification += (ref WFDNotificationData data, nint context) =>
             {
@@ -59,7 +65,7 @@ internal static class WindowsUtils
             };
 
             var session = await WiFiDirectSession.ConnectAsync(handle, address);
-        }, addressOption);
+        });
         return command;
     }
 }

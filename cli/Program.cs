@@ -17,4 +17,4 @@ RootCommand root = new(description: "Cross-platform NearShare (Project Rome) cli
 #endif
 };
 
-return await root.InvokeAsync(args);
+return await root.Parse(args).InvokeAsync();

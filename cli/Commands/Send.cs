@@ -10,32 +10,37 @@ internal class Send : INearShareCommand
 {
     public static Command CreateCommand()
     {
-        Option<string> deviceName = new("--deviceName", description: "DeviceName used for advertisement")
+        Option<string> deviceNameOption = new("--deviceName", "-n")
         {
-            IsRequired = false,
+            Required = false,
+            Description = "DeviceName used for advertisement. If not provided, a random name will be generated.",
+            DefaultValueFactory = _ => Environment.MachineName,
         };
-        deviceName.AddAlias("-n");
 
-        Option<string> urlOption = new("--url", description: "Url to send")
+        Option<string> urlOption = new("--url", "-u")
         {
-            IsRequired = false,
+            Required = false,
+            Description = "Url to send. If not provided, a file must be specified with --file option."
         };
-        deviceName.AddAlias("-u");
 
-        Option<string> fileOption = new("--file", description: "File path to send")
+        Option<string> fileOption = new("--file", "-f")
         {
-            IsRequired = false,
+            Required = false,
+            Description = "File path to send. If not provided, a url must be specified with --url option."
         };
-        deviceName.AddAlias("-f");
 
         Command command = new("send", description: "Send to a remote device")
         {
-            deviceName,
+            deviceNameOption,
             urlOption,
             fileOption
         };
-        command.SetHandler(async (deviceName, filePath, uriStr) =>
+        command.SetAction(async (ctx) =>
         {
+            var deviceName = ctx.GetRequiredValue(deviceNameOption);
+            var filePath = ctx.GetValue(fileOption);
+            var uriStr = ctx.GetValue(urlOption);
+
             Uri? uri = null;
             if (!string.IsNullOrEmpty(uriStr))
             {
@@ -110,7 +115,7 @@ internal class Send : INearShareCommand
                     task.Value = 1.0;
                 });
             }
-        }, deviceName, fileOption, urlOption);
+        });
         return command;
     }
 }
