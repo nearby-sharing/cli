@@ -1,6 +1,7 @@
 ﻿using ShortDev.Microsoft.ConnectedDevices;
 using ShortDev.Microsoft.ConnectedDevices.NearShare;
 using Spectre.Console;
+using System.Collections.Frozen;
 using System.CommandLine;
 using System.Diagnostics;
 
@@ -57,9 +58,10 @@ internal class Receive : INearShareCommand
                 }
 
                 fileTransfer.Accept(
-                    fileTransfer
-                        .Select(x => File.OpenWrite(Path.Combine(path, Path.GetFileName(x.Name))))
-                        .ToArray()
+                    fileTransfer.ToFrozenDictionary(
+                        x => x.Id,
+                        x => (Stream)File.OpenWrite(Path.Combine(path, Path.GetFileName(x.Name)))
+                    )
                 );
 
                 await AnsiConsole.Progress().StartAsync(async ctx =>
