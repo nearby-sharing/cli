@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/build/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/lib/">
+    <Project Path="android/lib/ShortDev.Microsoft.ConnectedDevices.NearShare/ShortDev.Microsoft.ConnectedDevices.NearShare.csproj" />
+    <Project Path="android/lib/ShortDev.Microsoft.ConnectedDevices/ShortDev.Microsoft.ConnectedDevices.csproj" />
+  </Folder>
+  <Folder Name="/windows/">
+    <Project Path="windows/NearShare.Windows.SocketBroker/NearShare.Windows.SocketBroker.csproj" />
+    <Project Path="windows/NearShare.Windows.WiFiDirect/NearShare.Windows.WiFiDirect.csproj" />
+  </Folder>
+  <Project Path="cli/NearShare.Cli.csproj" />
+</Solution>
